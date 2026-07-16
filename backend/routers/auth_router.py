@@ -41,6 +41,7 @@ async def login_user(user_data: UserLogin,response: Response):
     )
 
    return {
-        "user_id": user.user_id,
+        "user_id": str(user.id),
           "username": user.username,
+          "role" : user.role
     }
