@@ -1,8 +1,6 @@
-from multiprocessing import resource_sharer
-from fastapi import APIRouter, HTTPException, status,Response
-from service import auth_service as auth
+from fastapi import APIRouter, HTTPException, status, Response
 from classes.schema import UserRegister, UserLogin
-from classes.CRUD import authenticate_user
+from service import auth_service as auth
 from core.security import create_token
 
 router = APIRouter(
@@ -12,28 +10,28 @@ router = APIRouter(
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserRegister):
-   check = await auth.user_register(user_data)
-   if check is None:
+   new_user = await auth.user_register(user_data)
+   if new_user is None:
       raise HTTPException(
          status_code=status.HTTP_400_BAD_REQUEST,
-         detail="the register cannot be completed"
+         detail="Username or phone number already exists"
       )
-   return {"message": "User created successfully", "user_id": str(check.id)}
-
+   
+   return {"message": "User created successfully", "user_id": str(new_user.id)}
 
 @router.post("/login")
-async def login_user(user_data: UserLogin,response: Response):
-   user = await authenticate_user(user_data)
+async def login_user(user_data: UserLogin, response: Response):
+   user = await auth.user_login(user_data)
    if user is None:
          raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="the username or password is not correct"
+            detail="Incorrect username or password"
         )
    
-   access_token = create_token(str(user.id),user.role)
+   access_token = create_token(str(user.id), user.role)
    
    response.set_cookie(
-        key="access_token",
+        key="my_access_token",
         value=access_token,
         httponly=True,   
         samesite="lax",
@@ -42,6 +40,7 @@ async def login_user(user_data: UserLogin,response: Response):
 
    return {
         "user_id": str(user.id),
-          "username": user.username,
-          "role" : user.role
+        "username": user.username,
+        "role" : user.role,
+        "phone": user.phone
     }

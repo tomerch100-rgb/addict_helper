@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { loginSuccess } from "./authSlice";
 import { registerCheck as registerApi } from "./authSrevice";
-import { UserPlus, Mail, Lock, User, AlertCircle, Eye, EyeOff, Phone, ArrowRight } from "lucide-react";
+import { UserPlus, Lock, User, AlertCircle, Eye, EyeOff, Phone, ArrowRight } from "lucide-react";
 
 function RegisterForm() {
   const dispatch = useDispatch();
@@ -16,7 +16,6 @@ function RegisterForm() {
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     defaultValues: {
       username: "",
-      email: "",
       phone: "",
       password: "",
       role: "patient" // Default role
@@ -30,9 +29,8 @@ function RegisterForm() {
     setIsLoading(true);
 
     try {
-      // Call real register API
+      // Call real register API with only username, phone, password and role
       const result = await registerApi({
-        email: data.email,
         username: data.username,
         phone: data.phone,
         password: data.password,
@@ -41,9 +39,9 @@ function RegisterForm() {
 
       // After successful registration, we dispatch login success
       dispatch(loginSuccess({
-        email: data.email,
         username: data.username,
         role: data.role,
+        phone: data.phone,
         token: result.token || "logged-in"
       }));
 
@@ -97,7 +95,7 @@ function RegisterForm() {
           <div className="space-y-4">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
-                שם מלא
+                שם משתמש
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
@@ -106,37 +104,12 @@ function RegisterForm() {
                 <input
                   id="username"
                   type="text"
-                  {...register("username", { required: "שם מלא הוא שדה חובה", minLength: { value: 2, message: "שם מלא חייב להכיל לפחות 2 תווים" } })}
+                  {...register("username", { required: "שם משתמש הוא שדה חובה", minLength: { value: 2, message: "שם משתמש חייב להכיל לפחות 2 תווים" } })}
                   className="block w-full pr-10 pl-3 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-sm"
-                  placeholder="ישראל ישראלי"
+                  placeholder="הזן שם משתמש"
                 />
               </div>
               {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                כתובת אימייל
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  {...register("email", { 
-                    required: "אימייל הוא שדה חובה", 
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "כתובת אימייל לא תקינה"
-                    }
-                  })}
-                  className="block w-full pr-10 pl-3 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-sm"
-                  placeholder="name@example.com"
-                />
-              </div>
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
             </div>
 
             <div>

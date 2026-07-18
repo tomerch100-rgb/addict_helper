@@ -1,56 +1,52 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { loginSuccess } from "./authSlice";
-import { LogIn, Mail, Lock, AlertCircle, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { login as loginApi } from "./authSrevice";
+import { LogIn, User, Lock, AlertCircle, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      username: "",
+      password: ""
+    }
+  });
+
+  const onSubmit = async (data) => {
     setError("");
     setIsLoading(true);
 
     try {
-      // Simulating a successful backend response
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      // Call the real backend login api
+      const result = await loginApi({
+        username: data.username,
+        password: data.password
+      });
 
-      if (!email || !password) {
-        throw new Error("אנא מלא את כל השדות");
-      }
+      dispatch(loginSuccess({
+        user_id: result.user_id,
+        username: result.username,
+        role: result.role,
+        phone: result.phone,
+        token: "logged-in"
+      }));
 
-      // Mock user payload with role-based routing support
-      let role = "patient";
-      let username = email.split("@")[0];
-
-      if (email.includes("therapist") || email.includes("mentor") || email.includes("admin") || email.includes("guide")) {
-        role = "therapist";
-      }
-
-      const mockUser = {
-        email,
-        username: username || "משתמש",
-        role: role,
-        token: "mock-jwt-token-xyz",
-      };
-
-      dispatch(loginSuccess(mockUser));
-
-      if (role === "therapist") {
+      if (result.role === "therapist") {
         navigate("/therapist/dashboard");
       } else {
         navigate("/patient/dashboard");
       }
     } catch (err) {
-      setError(err.message || "אירעה שגיאה בהתחברות. אנא נסה שוב.");
+      setError(err.response?.data?.detail || err.message || "אירעה שגיאה בהתחברות. אנא נסה שוב.");
     } finally {
       setIsLoading(false);
     }
@@ -89,27 +85,25 @@ function LoginForm() {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                כתובת אימייל
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
+                שם משתמש
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                  <Mail className="h-5 w-5" />
+                  <User className="h-5 w-5" />
                 </div>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  {...register("username", { required: "שם משתמש הוא שדה חובה" })}
                   className="block w-full pr-10 pl-3 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-sm"
-                  placeholder="name@example.com"
+                  placeholder="הזן שם משתמש"
                 />
               </div>
+              {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>}
             </div>
 
             <div>
@@ -122,11 +116,8 @@ function LoginForm() {
                 </div>
                 <input
                   id="password"
-                  name="password"
                   type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password", { required: "סיסמה היא שדה חובה" })}
                   className="block w-full pr-10 pl-10 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-sm"
                   placeholder="••••••••"
                 />
@@ -138,6 +129,7 @@ function LoginForm() {
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
             </div>
           </div>
 

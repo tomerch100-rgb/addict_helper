@@ -1,4 +1,4 @@
-# backend/DB/models/user.py
+# backend/DB/models/User.py
 from datetime import datetime
 from typing import List, Optional, Annotated
 from pydantic import BaseModel, Field, ConfigDict
@@ -24,9 +24,10 @@ class PatientData(BaseModel):
 
 class User(Document):
     """המודל המרכזי של כלל המשתמשים במערכת"""
-    phone_number: Annotated[str, Indexed(unique=True)]  
+    username: Annotated[str, Indexed(unique=True)]
+    phone: Annotated[str, Indexed(unique=True)]
+    password_hash: str
     telegram_id: Optional[Annotated[str, Indexed(unique=True)]] = None
-    name: str
     role: str = Field(default="patient")  # patient, buddy, therapist, admin
     is_approved: bool = Field(default=False)
     patient_data: Optional[PatientData] = None
@@ -34,23 +35,17 @@ class User(Document):
 
     class Settings:
         name = "users" 
-model_config = ConfigDict(
+        
+    model_config = ConfigDict(
         json_schema_extra={
             "example": {
-                "phone_number": "0501234567",
+                "username": "tomerh",
+                "phone": "0501234567",
                 "telegram_id": "123456789",
-                "name": "Tomer Haymi",
                 "role": "patient",
                 "patient_data": {
                     "clean_since": "2026-07-01T12:00:00Z",
-                    "badges": [
-                        {
-                            "badge_id": "first_step",
-                            "name": "First Step",
-                            "icon": "🚀",
-                            "awarded_at": "2026-07-01T12:05:00Z"
-                        }
-                    ],
+                    "badges": [],
                     "status": "active"
                 }
             }

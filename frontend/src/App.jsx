@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./features/auth/Home";
+import Home from "./features/auth/home";
 import LoginForm from "./features/auth/LoginForm";
 import RegisterForm from "./features/auth/RegisterForm";
 import ProtectedLayout from "./component/ProtectedLayout";
