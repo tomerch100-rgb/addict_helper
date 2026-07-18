@@ -31,7 +31,7 @@ model_config = ConfigDict(
             "example": {
                 "patient_id": "60c72b2f9b1d8b2bad7f65a1",
                 "helper_id": "60c72b2f9b1d8b2bad7f65a2",
-                "status": "active",
+                "is_active": "active",
                 "is_sos": True,
                 "messages": [
                     {

@@ -1,19 +1,22 @@
-# backend/DB/connection.py
+
 import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from DB.models.User import User
 from DB.models.danger_zone import DangerZone
 from DB.models.session import Session
 
+load_dotenv()
+
+
+
 async def init_db():
-    mongodb_uri = os.getenv("MONGODB_URI", "mongodb://127.0.0.1:27017/cleanslate")
-    client = AsyncIOMotorClient(mongodb_uri)
-    db_name = mongodb_uri.split("/")[-1] or "cleanslate"
+    MONGODB_URI = os.getenv("MONGODB_URI")
+    if not MONGODB_URI:
+        print ("data base not found")
+    client = AsyncIOMotorClient(MONGODB_URI)
+    db_name = "cleanslate"
     
 
     database = client[db_name]
