@@ -1,15 +1,23 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+import contextlib
 from fastapi.middleware.cors import CORSMiddleware 
-from routers import auth_router
+from routers.auth_router import router as auth_router
+from routers.usersUploadFile import router as users_router
+from routers.addict_routers.dashbord_addict import router as patients_router
+
 from DB.db import init_db
 
-@asynccontextmanager
+@contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
 
-app = FastAPI(lifespan=lifespan)
+
+app = FastAPI(
+    title="CleanSlate API",
+    lifespan=lifespan
+    )
 
 origins = [
     "http://localhost:5173", 
@@ -23,4 +31,7 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
-app.include_router(auth_router.router ) 
+
+app.include_router(auth_router) 
+app.include_router(users_router)
+app.include_router(patients_router)

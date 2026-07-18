@@ -20,10 +20,10 @@ load_dotenv()
 
 async def seed_data():
     print("🧹 Cleaning old data from the database...")
-    mongodb_uri = os.getenv("MONGODB_URI", "mongodb://127.0.0.1:27017/cleanslate")
+    MONGODB_URI = os.getenv("MONGODB_URI")
     
     # Create the client
-    client = AsyncIOMotorClient(mongodb_uri)
+    client = AsyncIOMotorClient(MONGODB_URI)
     
     # Extract DB name
     db_name = "cleanslate"
@@ -85,7 +85,7 @@ async def seed_data():
                 Badge(badge_id="first_step", name="First Step", icon="🚀"),
                 Badge(badge_id="one_week", name="One Week Clean", icon="🌱", awarded_at=datetime.utcnow() - timedelta(days=5))
             ],
-            status="active"
+            is_active="active"
         )
     )
     await patient.insert()
@@ -108,7 +108,6 @@ async def seed_data():
     session = Session(
         patient_id=str(patient.id),
         helper_id=str(buddy.id),
-        status="active",
         is_sos=True,
         messages=[
             Message(
