@@ -10,6 +10,7 @@ class User(Document):
     email: str
     role: str
     phone: str
+    
 
     class Settings:
         name = "User"  # שם התיקייה (Collection) שתיפתח ב-MongoDB בענן

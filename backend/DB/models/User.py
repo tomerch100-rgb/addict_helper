@@ -19,7 +19,21 @@ class PatientData(BaseModel):
     badges: List[Badge] = Field(default=[])
     assigned_therapist_id: Optional[str] = None
     assigned_buddy_id: Optional[str] = None
-    status: str = Field(default="active")
+    is_active: str = Field(default="active")
+    onboarding_answers: Optional[OnboardingAnswers] = None
+    therapist_id: Optional[str] = Field(default=None, description="מזהה ה-ID של הפסיכולוג המטפל במערכת")
+    buddy_phone: Optional[str] = Field(default=None, description="מספר הטלפון של החבר/מלווה למקרה חירום")
+
+
+class OnboardingAnswers(BaseModel):
+    """Answers from the initial onboarding questionnaire"""
+    addiction_type: str  # e.g., "alcohol", "gambling", "substances"
+    addiction_duration_years: float  # How long they have been addicted
+    usage_frequency: str  # e.g., "daily", "few_times_a_week", "socially"
+    primary_triggers: List[str] = Field(default=[])  # e.g., ["loneliness", "stress", "evenings"]
+    motivation_anchors: List[str] = Field(default=[])  # e.g., ["family", "health", "finances"]
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
 
 
 class User(Document):
@@ -29,7 +43,8 @@ class User(Document):
     name: str
     role: str = Field(default="patient")  # patient, buddy, therapist, admin
     is_approved: bool = Field(default=False)
-    patient_data: Optional[PatientData] = None
+    patient_data: Optional[PatientData] = Field(default=None)
+    is_active : str = Field(default= "active")
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Settings:
@@ -51,7 +66,7 @@ model_config = ConfigDict(
                             "awarded_at": "2026-07-01T12:05:00Z"
                         }
                     ],
-                    "status": "active"
+                    "is_active": "active"
                 }
             }
         }
