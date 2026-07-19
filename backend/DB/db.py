@@ -1,5 +1,5 @@
 import os
-from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import AsyncMongoClient
 from beanie import init_beanie
 from dotenv import load_dotenv
 from DB.models.User import User
@@ -11,17 +11,19 @@ load_dotenv()
 async def init_db():
     MONGODB_URI = os.getenv("MONGODB_URI")
     if not MONGODB_URI:
-        raise ValueError("❌ Critical Error: MONGODB_URI environmental variable not found in .env file.")
+        print("data base not found")
+        return
         
-    client = AsyncIOMotorClient(MONGODB_URI)
+    client = AsyncMongoClient(MONGODB_URI)
     db_name = "cleanslate"
-    database = client.get_database(db_name)
+    database = client[db_name]
+    
     await init_beanie(
-        database=database,  # type: ignore
+        database=database,
         document_models=[
             User,
             DangerZone,
             Session
         ]
     )
-    print("✅ MongoDB Connection Initialized Successfully with Beanie!")
+    print("✅ MongoDB Connection Initialized Successfully with Beanie and PyMongo!")
