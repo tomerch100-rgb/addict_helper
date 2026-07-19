@@ -19,9 +19,16 @@ async def init_db():
     db_name = "cleanslate"
     
 
-    database = client[db_name]
+    database = client.get_database(db_name)
     
-
+    
+    try:
+        # אם המאפיין מחזיר אובייקט (כמו שקורה אצלך), נשתיל עליו את הפונקציה
+        database.client.append_metadata = lambda *args, **kwargs: None
+    except AttributeError:
+        # אם פייתון חוסם הגדרה ישירה, נעקוף דרך ה-__dict__ הפנימי של האובייקט
+        object.__setattr__(database.client, 'append_metadata', lambda *args, **kwargs: None)
+    
     await init_beanie(
         database=database,  # type: ignore
         document_models=[

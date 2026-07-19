@@ -76,5 +76,5 @@ class RoleChecker:
         return user_id, role
 
 require_admin = RoleChecker(["admin"])
-require_patients = RoleChecker(["patients"])
+require_patient = RoleChecker(["patient"])
 require_therapist = RoleChecker(["therapist"])

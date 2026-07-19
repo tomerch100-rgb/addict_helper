@@ -37,18 +37,17 @@ function RegisterForm() {
         role: data.role
       });
 
-      // After successful registration, we dispatch login success
-      dispatch(loginSuccess({
-        username: data.username,
-        role: data.role,
-        phone: data.phone,
-        token: result.token || "logged-in"
-      }));
-
       // Redirect dynamically based on role
       if (data.role === "therapist") {
-        navigate("/therapist/dashboard");
+        navigate("/pending-approval");
       } else {
+        // Automatically sign in patient since they are auto-approved
+        dispatch(loginSuccess({
+          username: data.username,
+          role: data.role,
+          phone: data.phone,
+          token: result.token || "logged-in"
+        }));
         navigate("/patient/dashboard");
       }
     } catch (err) {

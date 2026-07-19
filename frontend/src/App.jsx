@@ -7,6 +7,8 @@ import PatientDashboard from "./features/patient/PatientDashboard";
 import TherapistDashboard from "./features/therapist/TherapistDashboard";
 import NotFound from "./component/NotFound";
 
+import PendingApproval from "./features/auth/PendingApproval";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterForm />,
+  },
+  {
+    path: "/pending-approval",
+    element: <PendingApproval />,
   },
 
   {
@@ -37,8 +43,9 @@ const router = createBrowserRouter([
     element: <ProtectedLayout allowedRole="admin" />,
     children: [
       {
-        path: "/patient/dashboard",
         element: <PatientDashboard />,
+        path: "/admin/dashboard",
+        element: <div>Admin Dashboard</div>,
       },
 
     ],

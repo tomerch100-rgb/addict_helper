@@ -28,6 +28,12 @@ async def login_user(user_data: UserLogin, response: Response):
             detail="Incorrect username or password"
         )
    
+   if not user.is_approved:
+       raise HTTPException(
+           status_code=status.HTTP_403_FORBIDDEN,
+           detail="Your account is pending admin approval."
+       )
+   
    access_token = create_token(str(user.id), user.role)
    
    response.set_cookie(
