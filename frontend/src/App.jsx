@@ -43,7 +43,6 @@ const router = createBrowserRouter([
     element: <ProtectedLayout allowedRole="admin" />,
     children: [
       {
-        element: <PatientDashboard />,
         path: "/admin/dashboard",
         element: <div>Admin Dashboard</div>,
       },
