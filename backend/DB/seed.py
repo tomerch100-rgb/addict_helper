@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 # Add parent directory to path to allow importing the DB package correctly
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import AsyncMongoClient
 from beanie import init_beanie
 from dotenv import load_dotenv
 
@@ -23,17 +23,17 @@ async def seed_data():
     MONGODB_URI = os.getenv("MONGODB_URI")
     
     # Create the client
-    client = AsyncIOMotorClient(MONGODB_URI)
+    client = AsyncMongoClient(MONGODB_URI)
     
     # Extract DB name
     db_name = "cleanslate"
     
-    # Explicitly retrieve the Database object to prevent Type Checking errors
+    # Explicitly retrieve the Database object
     database = client[db_name]
     
     # Initialize Beanie with the Database object
     await init_beanie(
-        database=database,  # type: ignore
+        database=database,
         document_models=[User, DangerZone, Session]
     )
     
