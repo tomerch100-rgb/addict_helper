@@ -1,4 +1,3 @@
-
 import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
@@ -9,26 +8,14 @@ from DB.models.session import Session
 
 load_dotenv()
 
-
-
 async def init_db():
     MONGODB_URI = os.getenv("MONGODB_URI")
     if not MONGODB_URI:
-        print ("data base not found")
+        raise ValueError("❌ Critical Error: MONGODB_URI environmental variable not found in .env file.")
+        
     client = AsyncIOMotorClient(MONGODB_URI)
     db_name = "cleanslate"
-    
-
     database = client.get_database(db_name)
-    
-    
-    try:
-        # אם המאפיין מחזיר אובייקט (כמו שקורה אצלך), נשתיל עליו את הפונקציה
-        database.client.append_metadata = lambda *args, **kwargs: None
-    except AttributeError:
-        # אם פייתון חוסם הגדרה ישירה, נעקוף דרך ה-__dict__ הפנימי של האובייקט
-        object.__setattr__(database.client, 'append_metadata', lambda *args, **kwargs: None)
-    
     await init_beanie(
         database=database,  # type: ignore
         document_models=[

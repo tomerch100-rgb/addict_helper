@@ -31,7 +31,7 @@ async def create_user(user_data: UserRegister) -> User:
         is_approved = True
         patient_data = PatientData(
             badges=[],
-            status="active"
+            is_active="active"
         )
         
     new_user = User(

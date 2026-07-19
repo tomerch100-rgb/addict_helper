@@ -46,8 +46,9 @@ async def seed_data():
     
     # 1. Create Admin
     admin = User(
-        phone_number="0500000001",
-        name="Aviv Admin",
+        phone="0500000001",
+        username="Aviv Admin",
+        password_hash = "hashed_password"  ,
         role="admin",
         is_approved=True
     )
@@ -55,8 +56,9 @@ async def seed_data():
     
     # 2. Create Therapist (Psychologist)
     therapist = User(
-        phone_number="0500000002",
-        name="Dr. Daniel Levi",
+        phone="0500000002",
+        username="Dr. Daniel Levi",
+        password_hash = "hashed_password"  ,
         role="therapist",
         is_approved=True
     )
@@ -64,8 +66,9 @@ async def seed_data():
     
     # 3. Create Volunteer (Buddy)
     buddy = User(
-        phone_number="0500000003",
-        name="Roy Buddy",
+        phone="0500000003",
+        username="Roy Buddy",
+        password_hash = "hashed_password"  ,
         role="buddy",
         is_approved=True
     )
@@ -73,9 +76,10 @@ async def seed_data():
     
     # 4. Create Patient with predefined badges
     patient = User(
-        phone_number="0501234567",
+        phone="0501234567",
         telegram_id="123456789",  # Dummy Telegram ID
-        name="Tomer Haymi",
+        username="Tomer Haymi",
+        password_hash = "hashed_password"  ,
         role="patient",
         patient_data=PatientData(
             clean_since=datetime.utcnow() - timedelta(days=12),  # 12 days clean

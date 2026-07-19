@@ -43,15 +43,16 @@ async def upload_users_excel(file: UploadFile = File(...)):
                 continue  # אם התפקיד לא חוקי, נדלג על השורה צריך להוסיף קריאה לאדמין שיעדכן 
 
 
-            existing_user = await User.find_one(User.phone_number == phone)
+            existing_user = await User.find_one(User.phone == phone)
             if existing_user:
                 skipped_users += 1
                 continue  # דילוג למשתמש הבא
             
             # יצירת אובייקט משתמש חדש
             new_user = User(
-                phone_number=phone,
-                name=name,
+                phone=phone,
+                username=name,
+                password_hash = "hashed_password"  ,
                 role=role,
                 telegram_id = telegram_id,
                 is_active = is_active,

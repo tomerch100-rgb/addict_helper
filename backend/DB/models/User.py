@@ -68,7 +68,7 @@ class User(Document):
                             "awarded_at": "2026-07-01T12:05:00Z"
                         }
                     ],
-                    "status": "active"
+                    "is_active": "active"
                 }
             }
         }
