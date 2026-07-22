@@ -16,9 +16,6 @@ async def get_current_patient():
     return patient
 
 
-
-
-
 @router.get("/me/dashboard", status_code=status.HTTP_200_OK)
 async def get_patient_dashboard(current_user: User = Depends(get_current_patient)):
     """

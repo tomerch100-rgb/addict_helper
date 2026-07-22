@@ -4,6 +4,7 @@ import contextlib
 from fastapi.middleware.cors import CORSMiddleware 
 from routers.auth_router import router as auth_router
 from routers.usersUploadFile import router as users_router
+from routers.telegram.telegram_router import router as telegram_router
 from routers.addict_routers.dashbord_addict import router as patients_router
 from routers.admin_routers.dashbord_admin import router as admin_router
 
@@ -38,3 +39,4 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(patients_router)
 app.include_router(admin_router)
+app.include_router(telegram_router)
