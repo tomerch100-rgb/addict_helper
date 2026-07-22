@@ -28,3 +28,4 @@ class DangerZoneBreach(BaseModel):
     zone_id: str = Field(..., description="The unique database ID of the breached danger zone")
     current_latitude: float = Field(..., description="The current latitude reading from the user's mobile GPS device")
     current_longitude: float = Field(..., description="The current longitude reading from the user's mobile GPS device")
+
