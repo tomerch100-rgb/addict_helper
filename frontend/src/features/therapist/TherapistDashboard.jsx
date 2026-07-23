@@ -8,7 +8,8 @@ import CrisisTimeline from './components/CrisisTimeline';
 import MentalWeatherChart from './components/MentalWeatherChart';
 import AIInsights from './components/AIInsights';
 import PatientFilePanel from './components/PatientFilePanel';
-
+import DashboardLayout from '../../component/DashboardLayout';
+import TelegramConnectButton from '../../component/TelegramConnectButton';
 import {
   getDashboardSummary,
   getAssignedPatients,
@@ -20,6 +21,7 @@ import {
 
 function TherapistDashboard() {
   const user = useSelector((state) => state.auth.user);
+  const [currentTab, setCurrentTab] = useState('overview');
 
   const [summary, setSummary] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(true);
@@ -140,7 +142,9 @@ function TherapistDashboard() {
   const today = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+    <DashboardLayout currentTab={currentTab} setCurrentTab={setCurrentTab}>
+      {currentTab === 'overview' && (
+        <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Good morning, Dr. {user?.username || ''}</h1>
@@ -189,7 +193,27 @@ function TherapistDashboard() {
         onResolve={handleResolve}
         isResolving={isResolving}
       />
-    </div>
+        </div>
+      )}
+
+      {currentTab === 'settings' && (
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 max-w-2xl">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Settings & Integrations</h2>
+            
+            <div className="space-y-4">
+              <div className="pb-4 border-b border-gray-100">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">Telegram Connection</h3>
+                <p className="text-sm text-gray-500 mb-4">
+                  Connect your Telegram account to receive instant notifications and support directly through the app.
+                </p>
+                <TelegramConnectButton />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </DashboardLayout>
   );
 }
 

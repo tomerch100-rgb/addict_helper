@@ -8,6 +8,7 @@ from routers.telegram.telegram_router import router as telegram_router
 from routers.addict_routers.dashbord_addict import router as patients_router
 from routers.admin_routers.dashbord_admin import router as admin_router
 from routers.therapist_routers.dashbord_therapist import router as therapist_router
+from routers.telegram.telegram_connect import router as telegram_connect_router
 
 from DB.db import init_db
 
@@ -24,7 +25,7 @@ app = FastAPI(
     )
 
 origins = [
-    "http://localhost:5173", 
+    "http://localhost:5175", 
 ]
 
 app.add_middleware(
@@ -42,3 +43,4 @@ app.include_router(patients_router)
 app.include_router(admin_router)
 app.include_router(therapist_router)
 app.include_router(telegram_router)
+app.include_router(telegram_connect_router)

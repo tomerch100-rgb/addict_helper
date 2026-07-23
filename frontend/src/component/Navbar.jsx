@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { logout } from "../features/auth/authSlice";
+import { logoutUser } from "../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart, LogOut } from "lucide-react";
 
@@ -8,8 +8,8 @@ function Navbar() {
     const navigate = useNavigate()
     const user = useSelector((state) => state.auth.user)
 
-    const exit = () => {
-        dispatch(logout())
+    const exit = async () => {
+        await dispatch(logoutUser());
         navigate('/', {
             replace: true,
             state: { message: "ביי ביי תודה" }

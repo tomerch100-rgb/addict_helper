@@ -26,9 +26,12 @@ async def create_user(user_data: UserRegister) -> User:
     hashed_password = get_password_hash(user_data.password)
     
     patient_data = None
-    is_approved = False
+    is_approved = True
+    
+    if user_data.role == "therapist":
+        is_approved = False
+        
     if user_data.role == "patient":
-        is_approved = True
         patient_data = PatientData(
             badges=[],
             status="active"

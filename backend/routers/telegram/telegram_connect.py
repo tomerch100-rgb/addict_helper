@@ -9,10 +9,10 @@ router = APIRouter(
 )
 
 @router.post("/generate-telegram-token")
-async def generate_telegram_token(current_user: dict = Depends(get_current_user_id)):
+async def generate_telegram_token(current_user: tuple = Depends(get_current_user_id)):
     token = secrets.token_hex(16)
 
-    user_id = current_user.get("user id") 
+    user_id, role = current_user
     if not user_id:
         raise HTTPException(status_code=400, detail="User ID not found in token")
     
@@ -23,7 +23,7 @@ async def generate_telegram_token(current_user: dict = Depends(get_current_user_
     user.telegram_connect_token = token
     await user.save()    
 
-    bot_username = "cleanslate"
+    bot_username = "clean_slate_tomers_bot"
     telegram_url = f"https://t.me/{bot_username}?start={token}"
     
     return {"telegram_url": telegram_url}
