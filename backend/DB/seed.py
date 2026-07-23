@@ -3,6 +3,7 @@ import asyncio
 import os
 import sys
 from datetime import datetime, timedelta
+from core.security import hash_password
 
 # Add parent directory to path to allow importing the DB package correctly
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -50,7 +51,7 @@ async def seed_data():
     admin = User(
         phone="0500000001",
         username="Aviv Admin",
-        password_hash = "hashed_password"  ,
+      password_hash=hash_password("admin123")  ,
         role="admin",
         is_approved=True
     )
@@ -60,7 +61,7 @@ async def seed_data():
     therapist = User(
         phone="0500000002",
         username="Dr. Daniel Levi",
-        password_hash = "hashed_password"  ,
+        password_hash=hash_password("therapist123")  ,
         role="therapist",
         is_approved=True
     )
@@ -70,7 +71,7 @@ async def seed_data():
     buddy = User(
         phone="0500000003",
         username="Roy Buddy",
-        password_hash = "hashed_password"  ,
+        password_hash=hash_password("Roy123")  ,
         role="buddy",
         is_approved=True
     )
@@ -81,7 +82,7 @@ async def seed_data():
         phone="0501234567",
         telegram_id="123456789",  # Dummy Telegram ID
         username="Tomer Haymi",
-        password_hash = "hashed_password"  ,
+         password_hash=hash_password("Tomer123")  ,
         role="patient",
         patient_data=PatientData(
             clean_since=datetime.utcnow() - timedelta(days=12),  # 12 days clean
