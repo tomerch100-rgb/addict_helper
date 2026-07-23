@@ -1,4 +1,5 @@
 # backend/DB/models/User.py
+from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional, Annotated
 from pydantic import BaseModel, Field, ConfigDict

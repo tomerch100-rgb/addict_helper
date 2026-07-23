@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import Btn from "./Btn";
 import { logout } from "../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart, LogOut } from "lucide-react";
@@ -39,6 +38,8 @@ function Navbar() {
                     <div className="flex gap-2">
                         {user?.role === "therapist" ? (
                             <NavLink to="/therapist/dashboard" className={navLinkClass}>דאשבורד מטפלים</NavLink>
+                        ) : user?.role === "admin" ? (
+                            <NavLink to="/admin/dashboard" className={navLinkClass}>מרכז בקרה</NavLink>
                         ) : (
                             <NavLink to="/patient/dashboard" className={navLinkClass}>הדאשבורד שלי</NavLink>
                         )}
@@ -48,7 +49,7 @@ function Navbar() {
                 <div className="flex items-center gap-4">
                     {user?.username && (
                         <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full">
-                            שלום, {user.username} ({user.role === "therapist" ? "מטפל" : "מטופל"})
+                            שלום, {user.username} ({user.role === "therapist" ? "מטפל" : user.role === "admin" ? "מנהל" : "מטופל"})
                         </span>
                     )}
                     <button

@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from datetime import datetime, UTC
 from DB.models.User import User
 from DB.models.danger_zone import DangerZone ,GeoJSONPoint
+from DB.models.audit_log import AuditLog
 from classes.schema import DangerZoneCreate,DangerZoneBreach
 
 router = APIRouter(prefix="/patients", tags=["Patient Dashboard"])
@@ -130,7 +131,15 @@ async def trigger_sos_emergency(current_user: User = Depends(get_current_patient
     try:
         # Here we simulate logging the emergency or updating the user's risk tier status.
         # In the future, this endpoint will dispatch a WebSocket message or Telegram Alert to their psychologist.
-        
+        await AuditLog(
+            action="sos_triggered",
+            actor_id=str(current_user.id),
+            actor_name=current_user.name if hasattr(current_user, "name") else current_user.username,
+            target_id=str(current_user.id),
+            target_name=current_user.username,
+            details="Patient triggered the emergency SOS button."
+        ).insert()
+
         return {
             "status": "danger",
             "message": f"EMERGENCY ALERT TRIGGERED. An urgent notification has been dispatched to your assigned therapist.",
@@ -161,24 +170,33 @@ async def report_danger_zone_breach(
         # We check if the patient has an assigned therapist, otherwise we fallback to a general alert
         therapist_name = "Not Assigned"
         
-        if current_user.patient_data and current_user.patient_data.therapist_id:
+        if current_user.patient_data and current_user.patient_data.assigned_therapist_id:
             # Fetch the therapist user object from the database
-            therapist = await User.get(current_user.patient_data.therapist_id)
+            therapist = await User.get(current_user.patient_data.assigned_therapist_id)
             if therapist:
-                therapist_name = therapist.name
+                therapist_name = therapist.username
                 # 🚀 כאן בעתיד נשלב את ספריית ה-Telegram / Twilio:
                 # send_telegram_message(chat_id=therapist.telegram_chat_id, text=...)
         
         # Simulated Real-time Server log (what you will see in the terminal)
         print(f"\n🚨 [CRITICAL ALERT] 🚨")
-        print(f"Patient '{current_user.name}' has entered a danger zone!")
+        print(f"Patient '{current_user.username}' has entered a danger zone!")
         print(f"Location: {zone_name}")
         print(f"Dispatched urgent notification to Therapist: '{therapist_name}'\n")
-        
+
+        await AuditLog(
+            action="danger_zone_breach",
+            actor_id=str(current_user.id),
+            actor_name=current_user.username,
+            target_id=breach_data.zone_id,
+            target_name=zone_name,
+            details=f"Notified therapist '{therapist_name}'"
+        ).insert()
+
         return {
             "status": "alert_sent",
             "alert_details": {
-                "patient_name": current_user.name,
+                "patient_name": current_user.username,
                 "violated_zone": zone_name,
                 "notified_party": {
                     "role": "Therapist",

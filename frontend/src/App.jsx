@@ -5,6 +5,7 @@ import RegisterForm from "./features/auth/RegisterForm";
 import ProtectedLayout from "./component/ProtectedLayout";
 import PatientDashboard from "./features/patient/PatientDashboard";
 import TherapistDashboard from "./features/therapist/TherapistDashboard";
+import AdminDashboard from "./features/admin/AdminDashboard";
 import NotFound from "./component/NotFound";
 
 import PendingApproval from "./features/auth/PendingApproval";
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/admin/dashboard",
-        element: <div>Admin Dashboard</div>,
+        element: <AdminDashboard />,
       },
 
     ],
