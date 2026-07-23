@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List, Optional, Annotated
 from pydantic import BaseModel, Field, ConfigDict
 from beanie import Document, Indexed
+import pandas as pd
 
 
 class Badge(BaseModel):
@@ -11,6 +12,17 @@ class Badge(BaseModel):
     name: str
     icon: str
     awarded_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class OnboardingAnswers(BaseModel):
+    """Answers from the initial onboarding questionnaire"""
+    addiction_type: str  # e.g., "alcohol", "gambling", "substances"
+    addiction_duration_years: float  # How long they have been addicted
+    usage_frequency: str  # e.g., "daily", "few_times_a_week", "socially"
+    primary_triggers: List[str] = Field(default=[])  # e.g., ["loneliness", "stress", "evenings"]
+    motivation_anchors: List[str] = Field(default=[])  # e.g., ["family", "health", "finances"]
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
 
 
 class PatientData(BaseModel):
@@ -25,20 +37,10 @@ class PatientData(BaseModel):
     buddy_phone: Optional[str] = Field(default=None, description="מספר הטלפון של החבר/מלווה למקרה חירום")
 
 
-class OnboardingAnswers(BaseModel):
-    """Answers from the initial onboarding questionnaire"""
-    addiction_type: str  # e.g., "alcohol", "gambling", "substances"
-    addiction_duration_years: float  # How long they have been addicted
-    usage_frequency: str  # e.g., "daily", "few_times_a_week", "socially"
-    primary_triggers: List[str] = Field(default=[])  # e.g., ["loneliness", "stress", "evenings"]
-    motivation_anchors: List[str] = Field(default=[])  # e.g., ["family", "health", "finances"]
-    emergency_contact_name: Optional[str] = None
-    emergency_contact_phone: Optional[str] = None
-
-
 class User(Document):
     """המודל המרכזי של כלל המשתמשים במערכת"""
     username: Annotated[str, Indexed(unique=True)]
+    telegram_connect_token: str | None = None
     phone: Annotated[str, Indexed(unique=True)]
     password_hash: str
     telegram_id: Optional[Annotated[str, Indexed(unique=True)]] = None
