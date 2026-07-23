@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -42,6 +42,8 @@ function LoginForm() {
 
       if (result.role === "therapist") {
         navigate("/therapist/dashboard");
+      } else if (result.role === "admin") {
+        navigate("/admin/dashboard");
       } else {
         navigate("/patient/dashboard");
       }

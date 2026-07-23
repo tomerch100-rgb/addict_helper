@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import { Heart, Shield, Activity, Users, ArrowRight, Sparkles, Wind, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Heart, Shield, Activity, Users, ArrowRight, Sparkles, Wind } from "lucide-react";
 
 const quotes = [
   "צעד אחד בכל פעם.",
@@ -13,7 +13,6 @@ const quotes = [
 
 function Home() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [isBreathing, setIsBreathing] = useState(false);
 

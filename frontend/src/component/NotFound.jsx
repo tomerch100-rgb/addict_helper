@@ -1,4 +1,3 @@
-import React from 'react';
 import { Home, AlertCircle } from 'lucide-react';
 
 const NotFound = () => {

@@ -1,9 +1,0 @@
-fastapi
-uvicorn[standard]
-beanie
-motor
-python-dotenv
-bcrypt
-pyjwt
-pydantic
-pydantic-extra-types

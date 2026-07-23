@@ -7,6 +7,7 @@ from routers.usersUploadFile import router as users_router
 from routers.telegram.telegram_router import router as telegram_router
 from routers.addict_routers.dashbord_addict import router as patients_router
 from routers.admin_routers.dashbord_admin import router as admin_router
+from routers.therapist_routers.dashbord_therapist import router as therapist_router
 
 from DB.db import init_db
 
@@ -39,4 +40,5 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(patients_router)
 app.include_router(admin_router)
+app.include_router(therapist_router)
 app.include_router(telegram_router)
